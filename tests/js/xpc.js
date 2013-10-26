@@ -1,5 +1,8 @@
 (function(window) {
-  window.mozTestInfo = {appPath: window.xpcArgv[2]};
+
+  var GAIA_DIR = process.env.GAIA_DIR || '.';
+
+  window.mozTestInfo = {appPath: process.argv[2]};
   const excludedApps = [
     'bluetooth', 'keyboard', 'wallpaper', // no generic way to test yet
     'communications/facebook', 'communications/gmail', // part of other apps
@@ -10,9 +13,8 @@
     'system/camera', // copy of the camera app
   ];
 
-  var env = window.xpcModule.require('env');
   if (excludedApps.indexOf(window.mozTestInfo.appPath) !== -1) {
-    if (env.get('VERBOSE')) {
+    if (process.env.VERBOSE) {
       console.log("'" + window.mozTestInfo.appPath + "' is an excluded app, skipping tests.");
     }
 
@@ -24,35 +26,8 @@
   }
 
   window.parent = window;
-  window.location.host = 'localhost';
+//  window.location.host = 'localhost';
   window.Date = Date;
-
-  var seenModule = {};
-  var path = window.xpcModule.require('path');
-
-  window.require = function(url, cb) {
-
-    if (url.lastIndexOf('/common', 0) === 0) {
-      // required so we can load the unit test helper.js
-      url = '../../test_apps/test-agent' + url;
-    } else if (url.lastIndexOf('apps/', 0) === 0 ||
-               url.lastIndexOf('tests/', 0) === 0 ||
-               url.lastIndexOf('/', 0) === 0) {
-      // required for loading of test files
-      url = '../../' + url;
-    }
-
-    url = path.resolve(url);
-
-    if (!(url in seenModule)) {
-      seenModule[url] = true;
-      importScripts(url);
-    }
-
-    if (typeof(cb) === 'function') {
-      cb();
-    }
-  };
 
   Common = window.CommonResourceLoader = {
     url: function(url) {
@@ -60,10 +35,9 @@
     }
   };
 
-
-  require('/test_apps/test-agent/common/vendor/mocha/mocha.js');
-  require('/tests/reporters/jsonmoztest.js');
-  require('/tests/reporters/jsonmozperf.js');
+  var Mocha = require('mocha');
+  var JSONMozTestReporter = require(GAIA_DIR + '/tests/reporters/jsonmoztest.js');
+  require(GAIA_DIR + '/tests/reporters/jsonmozperf.js');
   Mocha.reporters.JSONMozTest = JSONMozTestReporter;
   process.stdout.write = window.xpcDump;
 
@@ -125,7 +99,7 @@
   };
 
 
-  var reporter = env.get('REPORTER') || 'Spec';
+  var reporter = process.env.REPORTER || 'Spec';
 
   if (!(reporter in Mocha.reporters)) {
     var reporters = Object.keys(Mocha.reporters);
@@ -144,6 +118,7 @@
     );
 
   } else {
+    var mocha = Mocha();
     mocha.setup({
       ui: 'tdd',
       reporter: Mocha.reporters[reporter],
@@ -151,8 +126,8 @@
       timeout: 20000
     });
 
-    window.mozTestInfo.runs = env.get('RUNS') || 5;
-    window.xpcArgv.slice(3).forEach(function(test) {
+    window.mozTestInfo.runs = process.env.RUNS || 5;
+    process.argv.slice(3).forEach(function(test) {
       require(test);
     });
 

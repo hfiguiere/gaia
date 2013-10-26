@@ -1,24 +1,21 @@
 #!/bin/bash
+#
+# Runner for test. Now uses Node.js
+#
+
+if [ ! -z "${RUNNER_DEBUG}" ] ; then
+    set -x
+fi
 
 DIR=`cd $(dirname ${BASH_SOURCE[0]}); pwd;`
+# GAIA_DIR will be used in the tests from env.
 GAIA_DIR=`cd $DIR/../../../; pwd;`
-XPCWINDOW=$GAIA_DIR/tools/xpcwindow/bin/xpcwindow
-
-XPCSHELL=`which xpcshell`
-
-if [ ! -x "$XPCSHELL" ]
-then
-  PATH=$XULRUNNER_DIRECTORY/bin/:$PATH;
-  if [ -n "${VERBOSE}" ]
-  then
-    echo "xpcshell is not found in the PATH"
-    echo "Using $XULRUNNER_DIRECTORY/bin/xpcshell."
-  fi
-fi
+export GAIA_DIR
+NODEJS=`which node`
 
 if [ -z "${VERBOSE}" ]
 then
-  $XPCWINDOW $DIR/../xpc.js $@ | grep -v -e '^TCPSocket: ' -e '^ERROR: '
+  $NODEJS $DIR/../xpc.js $@ | grep -v -e '^TCPSocket: ' -e '^ERROR: '
 else
-  $XPCWINDOW $DIR/../xpc.js $@
+  $NODEJS $DIR/../xpc.js $@
 fi
