@@ -7,9 +7,7 @@
 
 'use strict';
 
-(function(global) {
-
-function JSONMozPerfReporter(runner) {
+exports.JSONMozPerfReporter = function JSONMozPerfReporter(runner) {
   global.Mocha.reporters.Base.call(this, runner);
 
   // "mocha" is the Mocha instance
@@ -91,6 +89,3 @@ function average(arr) {
 
   return sum / arr.length;
 };
-
-global.Mocha.reporters.JSONMozPerf = JSONMozPerfReporter;
-})(this);

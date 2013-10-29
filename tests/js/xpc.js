@@ -36,10 +36,11 @@
   };
 
   var Mocha = require('mocha');
+
   var JSONMozTestReporter = require(GAIA_DIR + '/tests/reporters/jsonmoztest.js');
-  require(GAIA_DIR + '/tests/reporters/jsonmozperf.js');
+  var JSONMozPerfReporter = require(GAIA_DIR + '/tests/reporters/jsonmozperf.js');
+  Mocha.reporters.JSONMozPerf = JSONMozPerfReporter;
   Mocha.reporters.JSONMozTest = JSONMozTestReporter;
-  process.stdout.write = window.xpcDump;
 
   //Hack to format errors
   Mocha.reporters.Base.list = function(failures) {
