@@ -1,16 +1,22 @@
 'use strict';
 
-require('/tests/js/app_integration.js');
-require('/tests/js/integration_helper.js');
-require('/tests/performance/performance_helper.js');
+var GAIA_DIR = global.GAIA_DIR;
 
-const whitelistedApps = ['communications/contacts'];
+var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
+require(GAIA_DIR + '/tests/js/integration_helper.js');
+require(GAIA_DIR + '/tests/performance/performance_helper.js');
+
+var whitelistedApps = ['communications/contacts'];
+
 
 function GenericIntegration(device) {
   AppIntegration.apply(this, arguments);
 }
 
-var [manifestPath, entryPoint] = window.mozTestInfo.appPath.split('/');
+var manifestPath, entryPoint;
+var arr = window.mozTestInfo.appPath.split('/');
+manifestPath = arr[0];
+entryPoint = arr[1];
 
 GenericIntegration.prototype = {
   __proto__: AppIntegration.prototype,
@@ -30,7 +36,7 @@ suite(window.mozTestInfo.appPath + ' >', function() {
 
   setup(function() {
     // it affects the first run otherwise
-    yield IntegrationHelper.unlock(device);
+    /*yield*/ IntegrationHelper.unlock(device);
   });
 
   if (whitelistedApps.indexOf(window.mozTestInfo.appPath) === -1) {
@@ -40,7 +46,7 @@ suite(window.mozTestInfo.appPath + ' >', function() {
   test('', function() {
 
     this.timeout(500000);
-    yield device.setScriptTimeout(50000);
+    /*yield*/ device.setScriptTimeout(50000);
 
     var lastEvent = 'startup-path-done';
 
@@ -49,15 +55,15 @@ suite(window.mozTestInfo.appPath + ' >', function() {
       lastEvent: lastEvent
     });
 
-    yield performanceHelper.repeatWithDelay(function(app, next) {
+    /*yield*/ performanceHelper.repeatWithDelay(function(app, next) {
 
       var waitForBody = false;
-      yield app.launch(waitForBody);
+      /*yield*/ app.launch(waitForBody);
 
-      var runResults = yield performanceHelper.observe(next);
+      var runResults = /*yield*/ performanceHelper.observe(next);
 
       performanceHelper.reportRunDurations(runResults);
-      yield app.close();
+      /*yield*/ app.close();
     });
 
     performanceHelper.finish();

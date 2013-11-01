@@ -2,7 +2,7 @@
 
 var GAIA_DIR = global.GAIA_DIR;
 
-require(GAIA_DIR + '/tests/js/app_integration.js');
+var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
 var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
 var PerformanceHelper = require(GAIA_DIR + '/tests/performance/performance_helper.js');
 
@@ -12,7 +12,9 @@ function GenericIntegration(device) {
 
 var manifestPath, entryPoint;
 
-[manifestPath, entryPoint] = window.mozTestInfo.appPath.split('/');
+var arr = window.mozTestInfo.appPath.split('/');
+manifestPath = arr[0];
+entryPoint = arr[1];
 
 GenericIntegration.prototype = {
   __proto__: AppIntegration.prototype,

@@ -1,7 +1,14 @@
 (function(window) {
+
+  // register the globals and Node vs Browser
+  if(typeof window.navigator === 'undefined') {
+    console.log('running in node');
+    window = global.window;
+  }
+
   var TestUrlResolver = (function() {
 
-    let location = window.location,
+    var location = window.location,
         domainParts = window.location.host.split('.'),
         addSubdomain = false,
         prefix = null;
@@ -19,8 +26,8 @@
 
       parse: function tur_parse(url) {
         if (addSubdomain) {
-          let parsedUrl = this.PARSE_REGEX.exec(url);
-          let domain = location.protocol + '//' + parsedUrl[2] + '.';
+          var parsedUrl = this.PARSE_REGEX.exec(url);
+          var domain = location.protocol + '//' + parsedUrl[2] + '.';
 
           domain += domainParts.slice(1).join('.') + '/';
 

@@ -1,8 +1,12 @@
 // put stuff here to help your tests out...
 
 (function(window) {
-  // register the global
-  window.navigator;
+
+  // register the globals and Node vs Browser
+  if(typeof window.navigator === 'undefined') {
+    console.log('running in node');
+    window = global.window;
+  }
 
   var htmlFragments;
   var requestedFragments = {};
@@ -104,7 +108,7 @@
   };
 
   // template
-  requireCommon('test/template.js');
+  window.requireCommon('test/template.js');
 
   // load chai
   window.requireCommon('vendor/chai/chai.js', function() {
