@@ -12,10 +12,11 @@ DIR=`cd $(dirname ${BASH_SOURCE[0]}); pwd;`
 GAIA_DIR=`cd $DIR/../../../; pwd;`
 export GAIA_DIR
 NODEJS=`which node`
+# use $DEBUG to specify "debug" to Node.js
 
 if [ -z "${VERBOSE}" ]
 then
-  $NODEJS $DIR/../xpc.js $@ | grep -v -e '^TCPSocket: ' -e '^ERROR: '
+  $NODEJS $DEBUG $DIR/../xpc.js $@ | grep -v -e '^TCPSocket: ' -e '^ERROR: '
 else
-  $NODEJS $DIR/../xpc.js $@
+  $NODEJS $DEBUG $DIR/../xpc.js $@
 fi
