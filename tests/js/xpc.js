@@ -37,10 +37,11 @@
 
   var Mocha = require('mocha');
 
-  var JSONMozTestReporter = require(GAIA_DIR + '/tests/reporters/jsonmoztest.js');
-  var JSONMozPerfReporter = require(GAIA_DIR + '/tests/reporters/jsonmozperf.js');
-  Mocha.reporters.JSONMozPerf = JSONMozPerfReporter;
-  Mocha.reporters.JSONMozTest = JSONMozTestReporter;
+  var testReporter = require(GAIA_DIR + '/tests/reporters/jsonmoztest.js');
+  Mocha.reporters.JSONMozTest = testReporter.JSONMozTestReporter;
+
+  var perfReporter = require(GAIA_DIR + '/tests/reporters/jsonmozperf.js');
+  Mocha.reporters.JSONMozPerf = perfReporter.JSONMozPerfReporter;
 
   //Hack to format errors
   Mocha.reporters.Base.list = function(failures) {
@@ -119,8 +120,7 @@
     );
 
   } else {
-    var mocha = Mocha();
-    mocha.setup({
+    var mocha = new Mocha({
       ui: 'tdd',
       reporter: Mocha.reporters[reporter],
       // change the default timeout to all tests to 6 seconds
@@ -129,7 +129,7 @@
 
     window.mozTestInfo.runs = process.env.RUNS || 5;
     process.argv.slice(3).forEach(function(test) {
-      require(test);
+      require(GAIA_DIR + '/' + test);
     });
 
     mocha.run(function() {
