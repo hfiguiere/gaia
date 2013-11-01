@@ -42,11 +42,9 @@
 
   var Mocha = require('mocha');
 
-  var testReporter = require(GAIA_DIR + '/tests/reporters/jsonmoztest.js');
-  Mocha.reporters.JSONMozTest = testReporter.JSONMozTestReporter;
 
-  var perfReporter = require(GAIA_DIR + '/tests/reporters/jsonmozperf.js');
-  Mocha.reporters.JSONMozPerf = perfReporter.JSONMozPerfReporter;
+  Mocha.reporters.JSONMozTest = require(GAIA_DIR + '/tests/reporters/jsonmoztest.js');
+  Mocha.reporters.JSONMozPerf = require(GAIA_DIR + '/tests/reporters/jsonmozperf.js');
 
   //Hack to format errors
   Mocha.reporters.Base.list = function(failures) {

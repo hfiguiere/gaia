@@ -7,7 +7,9 @@
 
 'use strict';
 
-exports.JSONMozPerfReporter = function JSONMozPerfReporter(runner) {
+module.exports = JSONMozPerfReporter;
+
+function JSONMozPerfReporter(runner) {
   global.Mocha.reporters.Base.call(this, runner);
 
   // "mocha" is the Mocha instance

@@ -6,7 +6,9 @@
  */
 
 
-exports.JSONMozTestReporter = function JSONMozTestReporter(runner) {
+module.exports = JSONMozTestReporter;
+
+function JSONMozTestReporter(runner) {
   var self = this;
   global.Mocha.reporters.Base.call(this, runner);
 
