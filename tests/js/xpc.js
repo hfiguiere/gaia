@@ -2,6 +2,8 @@
 
   var GAIA_DIR = process.env.GAIA_DIR || '.';
 
+  global.GAIA_DIR = GAIA_DIR;
+
   window.mozTestInfo = {appPath: process.argv[2]};
   const excludedApps = [
     'bluetooth', 'keyboard', 'wallpaper', // no generic way to test yet
@@ -26,12 +28,15 @@
   }
 
   window.parent = window;
-//  window.location.host = 'localhost';
+  window.location = {};
+  window.location.host = 'localhost';
   window.Date = Date;
+  global.window = window;
+
 
   Common = window.CommonResourceLoader = {
     url: function(url) {
-      return url;
+      return GAIA_DIR + '/test_apps/test-agent/' + url;
     }
   };
 

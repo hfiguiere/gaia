@@ -1,10 +1,12 @@
-require('/test_apps/test-agent/common/test/helper.js');
-require('/tests/js/vendor/marionette.js');
-require('/tests/js/marionette_helper.js');
+var GAIA_DIR = global.GAIA_DIR;
+var window = global.window;
 
-var IntegrationHelper = (function() {
+//require(GAIA_DIR + '/tests/js/node_helper.js');
+require(GAIA_DIR + '/test_apps/test-agent/common/test/helper.js');
+require('marionette-client');
+require(GAIA_DIR + '/tests/js/marionette_helper.js');
 
-  var IntegrationHelper = {
+var IntegrationHelper = {
 
     /** static cache of js blobs */
     _fileCache: {},
@@ -16,7 +18,7 @@ var IntegrationHelper = (function() {
      * @return {String} absolute path output.
      */
     appPath: function(path) {
-      return _IMPORT_ROOT + '/../../' + path;
+      return GAIA_DIR + path;
     },
 
     cacheFile: function(file, callback) {
@@ -146,7 +148,6 @@ var IntegrationHelper = (function() {
       });
     }
 
-  };
+};
 
-  return IntegrationHelper;
-}(this));
+module.exports = IntegrationHelper;

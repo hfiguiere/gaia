@@ -35,20 +35,20 @@ var MarionetteHelper = {
 
       driver = new Marionette.Drivers.MozTcp();
 
-      yield driver.connect(MochaTask.next);
+      /*yield*/ driver.connect(MochaTask.next);
 
       device = new Marionette.Client(driver, {
         defaultCallback: MochaTask.nextNodeStyle
       });
 
-      yield device.startSession();
+      /*yield*/ device.startSession();
 
       callback(device);
     });
 
     suiteTeardown(function() {
       this.timeout(10000);
-      yield device.deleteSession();
+      /*yield*/ device.deleteSession();
     });
   }
 

@@ -1,4 +1,4 @@
-require('/tests/js/integration_helper.js');
+var IntegrationHelper = require(global.GAIA_DIR + '/tests/js/integration_helper.js');
 
 var AppIntegration = (function() {
 
@@ -203,10 +203,10 @@ var AppIntegration = (function() {
 
         // calling switchToFrame without an argument
         // will switch back to the main frame.
-        yield device.switchToFrame();
+        /*yield*/ device.switchToFrame();
 
         var closeCommand = self.createCommand('GaiaApps.closeWithManifestURL');
-        var result = yield device.executeAsyncScript(closeCommand);
+        var result = /*yield*/ device.executeAsyncScript(closeCommand);
 
         done();
       }, callback);
@@ -228,26 +228,26 @@ var AppIntegration = (function() {
       this.task(function(app, next, done) {
         var device = app.device;
 
-        yield IntegrationHelper.importScript(
+        /*yield*/ IntegrationHelper.importScript(
           device,
           '/tests/atoms/gaia_lock_screen.js',
           MochaTask.nodeNext
         );
 
-        yield device.executeAsyncScript(
+        /*yield*/ device.executeAsyncScript(
           'GaiaLockScreen.unlock();'
         );
 
-        yield IntegrationHelper.importScript(
+        /*yield*/ IntegrationHelper.importScript(
           device,
           '/tests/atoms/gaia_apps.js',
           MochaTask.nodeNext
         );
 
         var launchCommand = self.createCommand('GaiaApps.launchWithManifestURL');
-        var result = yield device.executeAsyncScript(launchCommand);
+        var result = /*yield*/ device.executeAsyncScript(launchCommand);
 
-        yield device.switchToFrame(result.frame);
+        /*yield*/ device.switchToFrame(result.frame);
 
         self.origin = result.origin;
         self.src = result.src;
@@ -255,8 +255,8 @@ var AppIntegration = (function() {
         self.frame = result.frame;
 
         if (waitForBody) {
-          var body = yield device.findElement('body');
-          yield app.waitUntilElement(body, 'displayed');
+          var body = /*yield*/ device.findElement('body');
+          /*yield*/ app.waitUntilElement(body, 'displayed');
         }
 
         done(null, self);
@@ -297,9 +297,9 @@ var AppIntegration = (function() {
       this.task(function(app, next, done) {
         var device = app.device;
 
-        yield device.setContext('chrome');
+        /*yield*/ device.setContext('chrome');
 
-        var base64 = yield IntegrationHelper.sendAtom(
+        var base64 = /*yield*/ IntegrationHelper.sendAtom(
           device,
           '/tests/atoms/screenshot',
           false,
@@ -310,7 +310,7 @@ var AppIntegration = (function() {
         base64 = base64.slice(22);
         fs.writeFileSync(path, decode(base64));
 
-        yield device.setContext('content');
+        /*yield*/ device.setContext('content');
 
         done(null, path);
       }, callback);
@@ -369,7 +369,7 @@ var AppIntegration = (function() {
       this.task(function(app, next, done) {
 
         // Function.toString is busted (804404)
-        var ms = yield app.device.executeScript(
+        var ms = /*yield*/ app.device.executeScript(
           'return Date.now();'
         );
 
@@ -390,7 +390,7 @@ var AppIntegration = (function() {
     remoteDate: function(callback) {
       this.task(function(app, next, done) {
 
-        var remote = yield IntegrationHelper.sendAtom(
+        var remote = /*yield*/ IntegrationHelper.sendAtom(
           app.device,
           '/tests/atoms/remote_date',
           false,
@@ -435,9 +435,9 @@ var AppIntegration = (function() {
         var elements;
 
         if (typeof(form) === 'string') {
-          elements = yield app.elements(form);
+          elements = /*yield*/ app.elements(form);
         } else if (form instanceof Marionette.Element) {
-          elements = yield form.findElements('[name]', next);
+          elements = /*yield*/ form.findElements('[name]', next);
         } else {
           elements = form;
         }
@@ -448,11 +448,11 @@ var AppIntegration = (function() {
 
         for (; i < len; i++) {
           var element = elements[i];
-          var tagName = yield element.tagName(next);
-          var type = yield element.getAttribute('type', next);
-          var name = yield element.getAttribute('name', next);
+          var tagName = /*yield*/ element.tagName(next);
+          var type = /*yield*/ element.getAttribute('type', next);
+          var name = /*yield*/ element.getAttribute('name', next);
           var atts = name.match(/\[(.*?)\]/g);
-          var value = yield element.getAttribute('value', next);
+          var value = /*yield*/ element.getAttribute('value', next);
           if (!atts) {
             values[name] = value;
           } else {
@@ -505,13 +505,13 @@ var AppIntegration = (function() {
       var values = this._resolveNames(values);
       this.task(function(app, next, done) {
         for (var field in values) {
-          var el = yield formElement.findElement(
+          var el = /*yield*/ formElement.findElement(
             '[name="' + field + '"]',
             'css selector',
             next
           );
-          yield el.clear(next);
-          yield el.sendKeys([values[field]], next);
+          /*yield*/ el.clear(next);
+          /*yield*/ el.sendKeys([values[field]], next);
         }
 
         done();
@@ -586,22 +586,22 @@ var AppIntegration = (function() {
       var self = this;
 
       this.task(function (app, next, done) {
-        yield IntegrationHelper.importScript(
+        /*yield*/ IntegrationHelper.importScript(
           app.device,
           'tests/performance/performance_helper_atom.js',
           next
         );
 
         var helperObject = 'window.wrappedJSObject.PerformanceHelperAtom';
-        yield app.device.executeAsyncScript(
+        /*yield*/ app.device.executeAsyncScript(
           helperObject + '.register();'
         );
 
-        var results = yield app.device.executeAsyncScript(
+        var results = /*yield*/ app.device.executeAsyncScript(
           helperObject + '.waitForEvent("' + stopEventName + '");'
         );
 
-        yield app.device.executeAsyncScript(
+        /*yield*/ app.device.executeAsyncScript(
           helperObject + '.unregister();'
         );
 
@@ -612,3 +612,5 @@ var AppIntegration = (function() {
 
   return AppIntegration;
 }());
+
+module.exports = AppIntegration;

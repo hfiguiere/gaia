@@ -1,14 +1,18 @@
 'use strict';
 
-require('/tests/js/app_integration.js');
-require('/tests/js/integration_helper.js');
-require('/tests/performance/performance_helper.js');
+var GAIA_DIR = global.GAIA_DIR;
+
+require(GAIA_DIR + '/tests/js/app_integration.js');
+var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
+var PerformanceHelper = require(GAIA_DIR + '/tests/performance/performance_helper.js');
 
 function GenericIntegration(device) {
   AppIntegration.apply(this, arguments);
 }
 
-var [manifestPath, entryPoint] = window.mozTestInfo.appPath.split('/');
+var manifestPath, entryPoint;
+
+[manifestPath, entryPoint] = window.mozTestInfo.appPath.split('/');
 
 GenericIntegration.prototype = {
   __proto__: AppIntegration.prototype,
@@ -30,26 +34,26 @@ suite(window.mozTestInfo.appPath + ' >', function() {
   });
 
   setup(function() {
-    yield IntegrationHelper.unlock(device); // it affects the first run otherwise
-    yield PerformanceHelper.registerLoadTimeListener(device);
+    /*yield*/ IntegrationHelper.unlock(device); // it affects the first run otherwise
+    /*yield*/ PerformanceHelper.registerLoadTimeListener(device);
   });
 
   teardown(function() {
-    yield PerformanceHelper.unregisterLoadTimeListener(device);
+    /*yield*/ PerformanceHelper.unregisterLoadTimeListener(device);
   });
 
   test('startup time', function() {
     // Mocha timeout for this test
     this.timeout(100000);
     // Marionnette timeout for each command sent to the device
-    yield device.setScriptTimeout(10000);
+    /*yield*/ device.setScriptTimeout(10000);
 
-    yield performanceHelper.repeatWithDelay(function(app, next) {
-      yield app.launch();
-      yield app.close();
+    /*yield*/ performanceHelper.repeatWithDelay(function(app, next) {
+      /*yield*/ app.launch();
+      /*yield*/ app.close();
     });
 
-    var results = yield PerformanceHelper.getLoadTimes(device);
+    var results = /*yield*/ PerformanceHelper.getLoadTimes(device);
     results = results.filter(function (element) {
       if (element.src.indexOf('app://' + manifestPath) !== 0) {
         return false;
