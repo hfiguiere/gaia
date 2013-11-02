@@ -1,3 +1,5 @@
+var Marionette = require('marionette-client');
+
 var MarionetteHelper = {
 
   /**
@@ -53,3 +55,5 @@ var MarionetteHelper = {
   }
 
 };
+
+module.exports = MarionetteHelper;

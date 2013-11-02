@@ -3,11 +3,11 @@
 var GAIA_DIR = global.GAIA_DIR;
 
 var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
-require(GAIA_DIR + '/tests/js/integration_helper.js');
+var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
 require(GAIA_DIR + '/tests/performance/performance_helper.js');
+var MarionetteHelper = require(GAIA_DIR + '/tests/js/marionette_helper.js');
 
 var whitelistedApps = ['communications/contacts'];
-
 
 function GenericIntegration(device) {
   AppIntegration.apply(this, arguments);

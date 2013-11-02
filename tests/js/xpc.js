@@ -132,14 +132,15 @@
 
     window.mozTestInfo.runs = process.env.RUNS || 5;
     process.argv.slice(3).forEach(function(test) {
-      require(GAIA_DIR + '/' + test);
+      mocha.addFile(GAIA_DIR + '/' + test);
     });
 
     mocha.run(function() {
-      window.xpcEventLoop.stop();
+      process.on('exit', function () {
+        process.exit(failures);
+      });
     });
 
-    window.xpcEventLoop.start();
   }
 
 }(this));

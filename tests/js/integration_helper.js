@@ -1,10 +1,7 @@
 var GAIA_DIR = global.GAIA_DIR;
 var window = global.window;
 
-//require(GAIA_DIR + '/tests/js/node_helper.js');
 require(GAIA_DIR + '/test_apps/test-agent/common/test/helper.js');
-require('marionette-client');
-require(GAIA_DIR + '/tests/js/marionette_helper.js');
 
 var IntegrationHelper = {
 
