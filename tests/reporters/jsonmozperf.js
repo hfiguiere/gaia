@@ -9,8 +9,10 @@
 
 module.exports = JSONMozPerfReporter;
 
+var Mocha = require('mocha');
+
 function JSONMozPerfReporter(runner) {
-  global.Mocha.reporters.Base.call(this, runner);
+  Mocha.reporters.Base.call(this, runner);
 
   // "mocha" is the Mocha instance
   // by default mocha report if any test leaks a variable in the global scope.

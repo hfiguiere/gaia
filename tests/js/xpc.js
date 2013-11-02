@@ -129,6 +129,7 @@
       // change the default timeout to all tests to 6 seconds
       timeout: 20000
     });
+    global.mocha = mocha;
 
     window.mozTestInfo.runs = process.env.RUNS || 5;
     process.argv.slice(3).forEach(function(test) {
