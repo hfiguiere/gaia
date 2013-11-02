@@ -1,4 +1,4 @@
-var IntegrationHelper = require(global.GAIA_DIR + '/tests/js/integration_helper.js');
+var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
 
 var AppIntegration = (function() {
 

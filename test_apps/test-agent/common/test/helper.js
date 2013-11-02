@@ -4,7 +4,6 @@
 
   // register the globals and Node vs Browser
   if(typeof window.navigator === 'undefined') {
-    console.log('running in node');
     window = global.window;
   }
 

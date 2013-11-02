@@ -1,6 +1,3 @@
-var GAIA_DIR = global.GAIA_DIR;
-var window = global.window;
-
 require(GAIA_DIR + '/test_apps/test-agent/common/test/helper.js');
 
 var IntegrationHelper = {

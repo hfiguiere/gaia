@@ -1,9 +1,5 @@
 'use strict';
 
-var GAIA_DIR = global.GAIA_DIR;
-var window = global.window;
-
-
 require(GAIA_DIR + '/tests/js/integration_helper.js');
 
 (function(global) {

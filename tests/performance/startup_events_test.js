@@ -1,7 +1,5 @@
 'use strict';
 
-var GAIA_DIR = global.GAIA_DIR;
-
 var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
 var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
 require(GAIA_DIR + '/tests/performance/performance_helper.js');
