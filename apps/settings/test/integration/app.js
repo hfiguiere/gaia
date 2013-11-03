@@ -1,7 +1,7 @@
 'use strict';
 
-require('/tests/js/app_integration.js');
-require('/tests/js/integration_helper.js');
+var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
+require(GAIA_DIR + '/tests/js/integration_helper.js');
 
 function SettingsIntegration(device) {
   AppIntegration.apply(this, arguments);

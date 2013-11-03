@@ -1,8 +1,9 @@
 'use strict';
 
 requireCommon('test/synthetic_gestures.js');
-require('/tests/performance/performance_helper.js');
-require('apps/settings/test/integration/app.js');
+require(GAIA_DIR + '/tests/performance/performance_helper.js');
+require(GAIA_DIR + '/apps/settings/test/integration/app.js');
+var MarionetteHelper = require(GAIA_DIR + '/tests/js/marionette_helper.js');
 
 suite(window.mozTestInfo.appPath + ' >', function() {
   var device;
@@ -15,12 +16,12 @@ suite(window.mozTestInfo.appPath + ' >', function() {
 
   setup(function() {
     // It affects the first run otherwise
-    yield IntegrationHelper.unlock(device);
+    /*yield*/ IntegrationHelper.unlock(device);
   });
 
   test('rendering WiFi list >', function() {
     this.timeout(500000);
-    yield device.setScriptTimeout(50000);
+    /*yield*/ device.setScriptTimeout(50000);
 
     var lastEvent = 'settings-panel-wifi-ready';
 
@@ -29,17 +30,17 @@ suite(window.mozTestInfo.appPath + ' >', function() {
       lastEvent: lastEvent
     });
 
-    yield performanceHelper.repeatWithDelay(function(app, next) {
+    /*yield*/ performanceHelper.repeatWithDelay(function(app, next) {
       var waitForBody = true;
-      yield app.launch(waitForBody);
+      /*yield*/ app.launch(waitForBody);
 
-      var wifiSubpanel = yield app.element('wifiSelector');
-      yield wifiSubpanel.singleTap();
+      var wifiSubpanel = /*yield*/ app.element('wifiSelector');
+      /*yield*/ wifiSubpanel.singleTap();
 
-      var runResults = yield performanceHelper.observe(next);
+      var runResults = /*yield*/ performanceHelper.observe(next);
       performanceHelper.reportRunDurations(runResults);
 
-      yield app.close();
+      /*yield*/ app.close();
     });
 
     performanceHelper.finish();
