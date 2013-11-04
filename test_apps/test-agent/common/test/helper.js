@@ -106,6 +106,10 @@
     require(Common.url('/common/' + url), cb);
   };
 
+  if(typeof window.navigator === 'undefined') {
+    global.requireCommon = window.requireCommon;
+  }
+
   // template
   window.requireCommon('test/template.js');
 
