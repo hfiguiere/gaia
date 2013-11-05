@@ -34,6 +34,15 @@
   global.window = window;
 
 
+  // require with a callback
+  global.require2 = function(url, cb) {
+    var r = require(url);
+    if (typeof(cb) === 'function') {
+      cb();
+    }
+    return r;
+  };
+
   Common = window.CommonResourceLoader = {
     url: function(url) {
       return GAIA_DIR + '/test_apps/test-agent/' + url;

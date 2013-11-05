@@ -3,6 +3,9 @@
 
   if (typeof(window.testSupport) === 'undefined') {
     window.testSupport = {};
+    if(typeof window.navigator === 'undefined') {
+      global.testSupport = window.testSupport;
+    }
   }
 
   support = window.testSupport;

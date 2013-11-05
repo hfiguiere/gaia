@@ -50,4 +50,9 @@
   }());
 
   window.TestUrlResolver = TestUrlResolver;
+
+  if(typeof module.exports !== 'undefined') {
+    module.exports = TestUrlResolver;
+  }
 }(this));
+

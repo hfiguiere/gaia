@@ -41,7 +41,7 @@
   }
 
   window.requireApp = function(url, cb, options) {
-    require(TestUrlResolver.resolve(url), cb, options);
+    require2(TestUrlResolver.resolve(url), cb, options);
   };
 
   /**
@@ -103,7 +103,7 @@
    *                      when resource has been loaded.
    */
   window.requireCommon = function(url, cb) {
-    require(Common.url('/common/' + url), cb);
+    return require2(Common.url('/common/' + url), cb);
   };
 
   if(typeof window.navigator === 'undefined') {
@@ -129,7 +129,7 @@
   });
 
   // url utilities
-  window.requireCommon('test/test_url_resolver.js');
+  global.TestUrlResolver = window.requireCommon('test/test_url_resolver.js');
 
 }(this));
 
