@@ -31,12 +31,7 @@ var MarionetteHelper = {
       var driver;
       this.timeout(10000);
 
-      if (typeof(window.TCPSocket) === 'undefined') {
-        throw new Error('TCPSocket must be present to run integration tests');
-      }
-
-      driver = new Marionette.Drivers.MozTcp();
-
+      driver = new Marionette.Drivers.TcpSync({});
       /*yield*/ driver.connect(MochaTask.next);
 
       device = new Marionette.Client(driver, {

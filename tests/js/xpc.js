@@ -4,7 +4,7 @@
 
   global.GAIA_DIR = GAIA_DIR;
 
-  window.mozTestInfo = {appPath: process.argv[2]};
+  global.mozTestInfo = {appPath: process.argv[2]};
   const excludedApps = [
     'bluetooth', 'keyboard', 'wallpaper', // no generic way to test yet
     'communications/facebook', 'communications/gmail', // part of other apps
@@ -15,13 +15,13 @@
     'system/camera', // copy of the camera app
   ];
 
-  if (excludedApps.indexOf(window.mozTestInfo.appPath) !== -1) {
+  if (excludedApps.indexOf(mozTestInfo.appPath) !== -1) {
     if (process.env.VERBOSE) {
-      console.log("'" + window.mozTestInfo.appPath + "' is an excluded app, skipping tests.");
+      console.log("'" + mozTestInfo.appPath + "' is an excluded app, skipping tests.");
     }
 
     var output = {};
-    output.stats = {application: window.mozTestInfo.appPath,
+    output.stats = {application: mozTestInfo.appPath,
                     suites: 0};
     console.log(JSON.stringify(output));
     return;
@@ -31,7 +31,7 @@
   window.location = {};
   window.location.host = 'localhost';
   window.Date = Date;
-  global.window = window;
+  global.window = window; // REMOVE
 
 
   // require with a callback
@@ -140,7 +140,7 @@
     });
     global.mocha = mocha;
 
-    window.mozTestInfo.runs = process.env.RUNS || 5;
+    mozTestInfo.runs = process.env.RUNS || 5;
     process.argv.slice(3).forEach(function(test) {
       mocha.addFile(GAIA_DIR + '/' + test);
     });

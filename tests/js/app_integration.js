@@ -68,9 +68,8 @@ var AppIntegration = (function() {
    * and returns {}.
    */
   function getTestVars() {
-    var env = window.xpcModule.require('env');
-    var testvars = env.get('TESTVARS') || 'testvars.json';
-    var fs = window.xpcModule.require('fs');
+    var testvars = process.env.TESTVARS || 'testvars.json';
+    var fs = require('fs');
 
     if ((testvars.slice(0, 1) !== '/') && (!fs.existsSync(testvars))) {
       // This starts in the tests/js/ directory, so we go up two
@@ -291,7 +290,7 @@ var AppIntegration = (function() {
       }
 
       // xpcmodule helper for writing to files. uses node FS api.
-      var fs = window.xpcModule.require('fs');
+      var fs = require('fs');
       var path = this.screenshotDir + name;
 
       this.task(function(app, next, done) {

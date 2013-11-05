@@ -5,7 +5,7 @@ require(GAIA_DIR + '/tests/performance/performance_helper.js');
 require(GAIA_DIR + '/apps/settings/test/integration/app.js');
 var MarionetteHelper = require(GAIA_DIR + '/tests/js/marionette_helper.js');
 
-suite(window.mozTestInfo.appPath + ' >', function() {
+suite(mozTestInfo.appPath + ' >', function() {
   var device;
   var app;
 

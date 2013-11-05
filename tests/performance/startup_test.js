@@ -11,18 +11,18 @@ function GenericIntegration(device) {
 
 var manifestPath, entryPoint;
 
-var arr = window.mozTestInfo.appPath.split('/');
+var arr = mozTestInfo.appPath.split('/');
 manifestPath = arr[0];
 entryPoint = arr[1];
 
 GenericIntegration.prototype = {
   __proto__: AppIntegration.prototype,
-  appName: window.mozTestInfo.appPath,
+  appName: mozTestInfo.appPath,
   manifestURL: 'app://' + manifestPath + '.gaiamobile.org/manifest.webapp',
   entryPoint: entryPoint
 };
 
-suite(window.mozTestInfo.appPath + ' >', function() {
+suite(mozTestInfo.appPath + ' >', function() {
   var device;
   var app;
 
