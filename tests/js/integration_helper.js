@@ -1,5 +1,5 @@
 require(GAIA_DIR + '/test_apps/test-agent/common/test/helper.js');
-
+var fs = require('fs');
 var IntegrationHelper = {
 
     /** static cache of js blobs */
@@ -21,25 +21,21 @@ var IntegrationHelper = {
         return;
       }
 
-      var xhr = new XMLHttpRequest();
-      var path = 'file://' + IntegrationHelper.appPath(file);
-      xhr.open('GET', path, true);
-
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-          if (xhr.status !== 0 && xhr.status !== 200) {
-            callback(new Error(
-              'cannot load file "' + path + '" status: "' + xhr.status + '"'
-            ));
-            return;
-          }
-
-          IntegrationHelper._fileCache[file] = xhr.responseText;
-          callback(null, xhr.responseText);
-        }
+      try {
+        fs.readFile(IntegrationHelper.appPath(file),
+		    function (err, data) {
+                      if(!err) {
+                        IntegrationHelper._fileCache[file] = data;
+                        callback(null, data);
+                      }
+                    });
       }
-
-      xhr.send(null);
+      catch(e) {
+        callback(new Error(
+          'cannot load file "' + path + '" status: "' + e + '"'
+        ));
+        return;
+      }
     },
 
     importScript: function(driver, file, callback) {
