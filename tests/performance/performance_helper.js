@@ -1,8 +1,5 @@
 'use strict';
 
-require(GAIA_DIR + '/tests/js/integration_helper.js');
-
-(function(global) {
 
   function extend(dest, obj) {
     for (var key in obj) {
@@ -27,7 +24,7 @@ require(GAIA_DIR + '/tests/js/integration_helper.js');
       // we add 1s to this value to give a little more time to the background
       // task to finish the preloading
       spawnInterval: 6000,
-      runs: window.mozTestInfo.runs
+      runs: mozTestInfo.runs
     };
 
     // overwrite values from the user
@@ -218,5 +215,6 @@ require(GAIA_DIR + '/tests/js/integration_helper.js');
     }
   };
 
-  global.PerformanceHelper = PerformanceHelper;
-})(window);
+module.exports = PerformanceHelper;
+
+

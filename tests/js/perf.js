@@ -1,10 +1,8 @@
 (function(window) {
 
-  var GAIA_DIR = process.env.GAIA_DIR || '.';
+  global.GAIA_DIR = process.env.GAIA_DIR || './';
 
-  global.GAIA_DIR = GAIA_DIR;
-
-  global.mozTestInfo = {appPath: process.argv[2]};
+  global.mozTestInfo = {appPath: process.env.CURRENT_APP};
   const excludedApps = [
     'bluetooth', 'keyboard', 'wallpaper', // no generic way to test yet
     'communications/facebook', 'communications/gmail', // part of other apps
@@ -15,6 +13,7 @@
     'system/camera', // copy of the camera app
   ];
 
+console.log(JSON.stringify(mozTestInfo));
   if (excludedApps.indexOf(mozTestInfo.appPath) !== -1) {
     if (process.env.VERBOSE) {
       console.log("'" + mozTestInfo.appPath + "' is an excluded app, skipping tests.");
@@ -132,6 +131,8 @@
     );
 
   } else {
+// I don't think we need any setup here.
+/**
     var mocha = new Mocha({
       ui: 'tdd',
       reporter: Mocha.reporters[reporter],
@@ -141,16 +142,19 @@
     global.mocha = mocha;
 
     mozTestInfo.runs = process.env.RUNS || 5;
+      console.log('argv = ' + process.argv);
     process.argv.slice(3).forEach(function(test) {
+console.log('adding file ' + test + ' to test');
       mocha.addFile(GAIA_DIR + '/' + test);
     });
 
     mocha.run(function() {
       process.on('exit', function () {
+console.log("failures " + JSON.stringify(failures));
         process.exit(failures);
       });
     });
-
+*/
   }
 
 }(this));

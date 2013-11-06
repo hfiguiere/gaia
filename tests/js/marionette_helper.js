@@ -1,4 +1,5 @@
 var Marionette = require('marionette-client');
+var MochaTask = require(GAIA_DIR + '/test_apps/test-agent/common/test/mocha_task.js');
 
 var MarionetteHelper = {
 
