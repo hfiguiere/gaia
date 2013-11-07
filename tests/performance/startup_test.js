@@ -21,7 +21,8 @@ GenericIntegration.prototype = {
   entryPoint: entryPoint
 };
 
-suite(mozTestInfo.appPath + ' >', function() {
+marionette('startup test ' + mozTestInfo.appPath + ' >', function() {
+
   var device;
   var app;
   var client = marionette.client();
@@ -32,40 +33,44 @@ suite(mozTestInfo.appPath + ' >', function() {
   device = app.device;
   performanceHelper = new PerformanceHelper({ app: app });
 
-  setup(function() {
-    IntegrationHelper.unlock(device); // it affects the first run otherwise
-    PerformanceHelper.registerLoadTimeListener(device);
-  });
+  suite(mozTestInfo.appPath + ' >', function() {
 
-  teardown(function() {
-    PerformanceHelper.unregisterLoadTimeListener(device);
-  });
-
-  test('startup time', function() {
-    // Mocha timeout for this test
-    this.timeout(100000);
-    // Marionnette timeout for each command sent to the device
-    device.setScriptTimeout(10000);
-
-    performanceHelper.repeatWithDelay(function(app, next) {
-      app.launch();
-      app.close();
+    setup(function() {
+      IntegrationHelper.unlock(device); // it affects the first run otherwise
+      PerformanceHelper.registerLoadTimeListener(device);
     });
 
-    var results = PerformanceHelper.getLoadTimes(device);
-    results = results.filter(function (element) {
-      if (element.src.indexOf('app://' + manifestPath) !== 0) {
-        return false;
-      }
-      if (entryPoint && element.src.indexOf(entryPoint) === -1) {
-        return false;
-      }
-      return true;
-    }).map(function (element) {
-      return element.time;
+    teardown(function() {
+      PerformanceHelper.unregisterLoadTimeListener(device);
     });
 
-    PerformanceHelper.reportDuration(results);
+    test('startup time', function() {
+      // Mocha timeout for this test
+      this.timeout(100000);
+      // Marionnette timeout for each command sent to the device
+      device.setScriptTimeout(10000);
+
+      performanceHelper.repeatWithDelay(function(app, next) {
+        app.launch();
+        app.close();
+      });
+
+      var results = PerformanceHelper.getLoadTimes(device);
+      results = results.filter(function (element) {
+        if (element.src.indexOf('app://' + manifestPath) !== 0) {
+          return false;
+        }
+        if (entryPoint && element.src.indexOf(entryPoint) === -1) {
+          return false;
+        }
+        return true;
+      }).map(function (element) {
+        return element.time;
+      });
+
+      PerformanceHelper.reportDuration(results);
+    });
   });
+
 });
 
