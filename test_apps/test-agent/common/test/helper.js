@@ -10,10 +10,9 @@
   var htmlFragments;
   var requestedFragments = {};
 
-  var Common = window.parent.CommonResourceLoader,
-      // mocha test methods we want to provide
-      // yield support to.
-      testMethods = [
+  // mocha test methods we want to provide
+  // yield support to.
+  var testMethods = [
         'suiteSetup',
         'setup',
         'test',
@@ -40,7 +39,7 @@
     Assertion.prototype.assert = chaiAssert;
   }
 
-  window.requireApp = function(url, cb, options) {
+  global.requireApp = function(url, cb, options) {
     require2(TestUrlResolver.resolve(url), cb, options);
   };
 
@@ -50,7 +49,7 @@
    * @param {String} is the type of element.
    * @param {Object} attrs optional attributes.
    */
-  window.suiteTemplate = function(is, attrs) {
+  global.suiteTemplate = function(is, attrs) {
 
     var testElement;
 
@@ -73,7 +72,7 @@
     });
   };
 
-  window.requireElements = function(url) {
+  global.requireElements = function(url) {
 
     url = TestUrlResolver.resolve(url);
 
@@ -93,6 +92,7 @@
   };
 
 
+  var CommonResourceLoader = require(GAIA_DIR + '/tests/js/common.js');
   /**
    * Require a file from /common/ resources.
    *
@@ -102,34 +102,30 @@
    * @param {Function} cb optional callback called
    *                      when resource has been loaded.
    */
-  window.requireCommon = function(url, cb) {
-    return require2(Common.url('/common/' + url), cb);
+  global.requireCommon = function(url, cb) {
+    return require2(CommonResourceLoader.url('/common/' + url), cb);
   };
 
-  if(typeof window.navigator === 'undefined') {
-    global.requireCommon = window.requireCommon;
-  }
-
   // template
-  window.requireCommon('test/template.js');
+  requireCommon('test/template.js');
 
   // load chai
-  window.requireCommon('vendor/chai/chai.js', function() {
+  requireCommon('vendor/chai/chai.js', function() {
     chai.Assertion.includeStack = true;
     patchChai(chai.Assertion);
-    window.assert = chai.assert;
+    global.assert = chai.assert;
   });
 
   // mocha helpers
-  window.requireCommon('test/mocha_task.js');
-  window.requireCommon('test/mocha_generators.js', function() {
+  requireCommon('test/mocha_task.js');
+  requireCommon('test/mocha_generators.js', function() {
     testMethods.forEach(function(method) {
       testSupport.mochaGenerators.overload(method);
     });
   });
 
   // url utilities
-  global.TestUrlResolver = window.requireCommon('test/test_url_resolver.js');
+  global.TestUrlResolver = requireCommon('test/test_url_resolver.js');
 
 }(this));
 

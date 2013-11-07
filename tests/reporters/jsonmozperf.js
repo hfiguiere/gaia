@@ -9,7 +9,8 @@
 
 module.exports = JSONMozPerfReporter;
 
-var Mocha = require('mocha');
+var Mocha = require('mocha'),
+    util = require('util');
 
 function JSONMozPerfReporter(runner) {
   Mocha.reporters.Base.call(this, runner);
@@ -19,7 +20,7 @@ function JSONMozPerfReporter(runner) {
   // We don't need this here because we're really running tests on the device,
   // so this ignores leaks in our tests, and make it easier to use a global
   // variable to save our test resuls.
-  global.mocha.options.ignoreLeaks = true;
+//  global.mocha.options.ignoreLeaks = true;
 
   var failures = [];
   var passes = [];
@@ -54,7 +55,7 @@ function JSONMozPerfReporter(runner) {
 
   var self = this;
   runner.on('end', function() {
-    self.stats.application = window.mozTestInfo.appPath;
+    self.stats.application = process.env.CURRENT_APP;
     var obj = {
       stats: self.stats,
       failures: failures.map(cleanErr),
@@ -68,7 +69,7 @@ function JSONMozPerfReporter(runner) {
 function cleanErr(test) {
   var err = test.err;
   var message = err.message || '';
-  var stack = window.xpcError.format(err);
+  var stack = util.format(err);
   var index = stack.indexOf(message) + message.length;
   var msg = stack.slice(0, index);
   var actual = err.actual;

@@ -3,7 +3,6 @@
 var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
 var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
 var PerformanceHelper = require(GAIA_DIR + '/tests/performance/performance_helper.js');
-var MarionetteHelper = require(GAIA_DIR + '/tests/js/marionette_helper.js');
 
 function GenericIntegration(device) {
   AppIntegration.apply(this, arguments);
@@ -25,36 +24,35 @@ GenericIntegration.prototype = {
 suite(mozTestInfo.appPath + ' >', function() {
   var device;
   var app;
+  var client = marionette.client();
 
   var performanceHelper;
 
-  MarionetteHelper.start(function(client) {
-    app = new GenericIntegration(client);
-    device = app.device;
-    performanceHelper = new PerformanceHelper({ app: app });
-  });
+  app = new GenericIntegration(client);
+  device = app.device;
+  performanceHelper = new PerformanceHelper({ app: app });
 
   setup(function() {
-    /*yield*/ IntegrationHelper.unlock(device); // it affects the first run otherwise
-    /*yield*/ PerformanceHelper.registerLoadTimeListener(device);
+    IntegrationHelper.unlock(device); // it affects the first run otherwise
+    PerformanceHelper.registerLoadTimeListener(device);
   });
 
   teardown(function() {
-    /*yield*/ PerformanceHelper.unregisterLoadTimeListener(device);
+    PerformanceHelper.unregisterLoadTimeListener(device);
   });
 
   test('startup time', function() {
     // Mocha timeout for this test
     this.timeout(100000);
     // Marionnette timeout for each command sent to the device
-    /*yield*/ device.setScriptTimeout(10000);
+    device.setScriptTimeout(10000);
 
-    /*yield*/ performanceHelper.repeatWithDelay(function(app, next) {
-      /*yield*/ app.launch();
-      /*yield*/ app.close();
+    performanceHelper.repeatWithDelay(function(app, next) {
+      app.launch();
+      app.close();
     });
 
-    var results = /*yield*/ PerformanceHelper.getLoadTimes(device);
+    var results = PerformanceHelper.getLoadTimes(device);
     results = results.filter(function (element) {
       if (element.src.indexOf('app://' + manifestPath) !== 0) {
         return false;

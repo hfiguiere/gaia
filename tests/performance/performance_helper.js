@@ -1,5 +1,6 @@
 'use strict';
 
+var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
 
   function extend(dest, obj) {
     for (var key in obj) {

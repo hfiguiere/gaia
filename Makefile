@@ -704,7 +704,7 @@ test-perf:
 			echo ','; \
 		fi; \
 		FILES_PERF=`test -d apps/$$app/test/performance && find apps/$$app/test/performance -name "*_test.js" -type f`; \
-		CURRENT_APP=$$app NPM_REGISTRY=$(NPM_REGISTRY) ./bin/gaia-marionette ./tests/js/perf.js $${SHARED_PERF} $${FILES_PERF} ;\
+		CURRENT_APP=$$app NPM_REGISTRY=$(NPM_REGISTRY) ./bin/gaia-marionette ./tests/js/perf.js $${SHARED_PERF} $${FILES_PERF} -R "`pwd`/tests/reporters/jsonmozperf.js";\
 	done; \
 	echo ']';
 

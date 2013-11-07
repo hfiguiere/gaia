@@ -2,26 +2,25 @@
 
 requireCommon('test/synthetic_gestures.js');
 require(GAIA_DIR + '/tests/performance/performance_helper.js');
-var MarionetteHelper = require(GAIA_DIR + '/tests/js/marionette_helper.js');
-require(GAIA_DIR + '/apps/communications/dialer/test/integration/app.js');
+var DialerIntegration =
+  require(GAIA_DIR + '/apps/communications/dialer/test/integration/app.js');
 
 suite(mozTestInfo.appPath + '>', function() {
   var device;
   var app;
+  var client = marionette.client();
 
-  MarionetteHelper.start(function(client) {
-    app = new DialerIntegration(client);
-    device = app.device;
-  });
+  app = new DialerIntegration(client);
+  device = app.device;
 
   setup(function() {
-    /*yield*/ IntegrationHelper.unlock(device);
+    IntegrationHelper.unlock(device);
   });
 
   test('Dialer/callLog rendering time >', function() {
 
     this.timeout(500000);
-    /*yield*/ device.setScriptTimeout(50000);
+    device.setScriptTimeout(50000);
 
     var lastEvent = 'call-log-ready';
 
@@ -30,18 +29,18 @@ suite(mozTestInfo.appPath + '>', function() {
       lastEvent: lastEvent
     });
 
-    /*yield*/ performanceHelper.repeatWithDelay(function(app, next) {
+    performanceHelper.repeatWithDelay(function(app, next) {
       var waitForBody = true;
-      /*yield*/ app.launch(waitForBody);
+      app.launch(waitForBody);
 
-      var recentsButton = /*yield*/ app.element('optionRecents');
+      var recentsButton = app.element('optionRecents');
 
-      /*yield*/ recentsButton.singleTap();
+      recentsButton.singleTap();
 
-      var runResults = /*yield*/ performanceHelper.observe(next);
+      var runResults = performanceHelper.observe(next);
       performanceHelper.reportRunDurations(runResults);
 
-      /*yield*/ app.close();
+      app.close();
     });
 
     performanceHelper.finish();

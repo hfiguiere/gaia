@@ -3,7 +3,6 @@
 var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
 var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
 require(GAIA_DIR + '/tests/performance/performance_helper.js');
-var MarionetteHelper = require(GAIA_DIR + '/tests/js/marionette_helper.js');
 
 var whitelistedApps = ['communications/contacts'];
 
@@ -26,15 +25,14 @@ GenericIntegration.prototype = {
 suite(mozTestInfo.appPath + ' >', function() {
   var device;
   var app;
+  var client = marionette.client();
 
-  MarionetteHelper.start(function(client) {
-    app = new GenericIntegration(client);
-    device = app.device;
-  });
+  app = new GenericIntegration(client);
+  device = app.device;
 
   setup(function() {
     // it affects the first run otherwise
-    /*yield*/ IntegrationHelper.unlock(device);
+    IntegrationHelper.unlock(device);
   });
 
   if (whitelistedApps.indexOf(mozTestInfo.appPath) === -1) {
@@ -44,7 +42,7 @@ suite(mozTestInfo.appPath + ' >', function() {
   test('', function() {
 
     this.timeout(500000);
-    /*yield*/ device.setScriptTimeout(50000);
+    device.setScriptTimeout(50000);
 
     var lastEvent = 'startup-path-done';
 
@@ -53,15 +51,15 @@ suite(mozTestInfo.appPath + ' >', function() {
       lastEvent: lastEvent
     });
 
-    /*yield*/ performanceHelper.repeatWithDelay(function(app, next) {
+    performanceHelper.repeatWithDelay(function(app, next) {
 
       var waitForBody = false;
-      /*yield*/ app.launch(waitForBody);
+      app.launch(waitForBody);
 
-      var runResults = /*yield*/ performanceHelper.observe(next);
+      var runResults = performanceHelper.observe(next);
 
       performanceHelper.reportRunDurations(runResults);
-      /*yield*/ app.close();
+      app.close();
     });
 
     performanceHelper.finish();

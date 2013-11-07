@@ -7,8 +7,8 @@
 
   var TestUrlResolver = (function() {
 
-    var location = window.location,
-        domainParts = window.location.host.split('.'),
+    var location = global.location,
+        domainParts = global.location.host.split('.'),
         addSubdomain = false,
         prefix = null;
 
@@ -49,7 +49,7 @@
 
   }());
 
-  window.TestUrlResolver = TestUrlResolver;
+  global.TestUrlResolver = TestUrlResolver;
 
   if(typeof module.exports !== 'undefined') {
     module.exports = TestUrlResolver;

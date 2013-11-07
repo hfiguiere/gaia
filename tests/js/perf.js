@@ -1,4 +1,4 @@
-(function(window) {
+  var util = require('util');
 
   global.GAIA_DIR = process.env.GAIA_DIR || './';
 
@@ -26,32 +26,15 @@ console.log(JSON.stringify(mozTestInfo));
     return;
   }
 
-  window.parent = window;
-  window.location = {};
-  window.location.host = 'localhost';
+/*
   window.Date = Date;
   global.window = window; // REMOVE
-
-
-  // require with a callback
-  global.require2 = function(url, cb) {
-    var r = require(url);
-    if (typeof(cb) === 'function') {
-      cb();
-    }
-    return r;
-  };
-
-  Common = window.CommonResourceLoader = {
-    url: function(url) {
-      return GAIA_DIR + '/test_apps/test-agent/' + url;
-    }
-  };
+*/
 
   var Mocha = require('mocha');
 
 
-  Mocha.reporters.JSONMozTest = require(GAIA_DIR + '/tests/reporters/jsonmoztest.js');
+//  Mocha.reporters.JSONMozTest = require(GAIA_DIR + '/tests/reporters/jsonmoztest.js');
   Mocha.reporters.JSONMozPerf = require(GAIA_DIR + '/tests/reporters/jsonmozperf.js');
 
   //Hack to format errors
@@ -65,7 +48,7 @@ console.log(JSON.stringify(mozTestInfo));
       // msg
       var err = test.err,
           message = err.message || '',
-          stack = window.xpcError.format(err),
+          stack = util.format(err),
           index = stack.indexOf(message) + message.length,
           msg = stack.slice(0, index),
           actual = err.actual,
@@ -131,30 +114,6 @@ console.log(JSON.stringify(mozTestInfo));
     );
 
   } else {
-// I don't think we need any setup here.
-/**
-    var mocha = new Mocha({
-      ui: 'tdd',
-      reporter: Mocha.reporters[reporter],
-      // change the default timeout to all tests to 6 seconds
-      timeout: 20000
-    });
-    global.mocha = mocha;
-
     mozTestInfo.runs = process.env.RUNS || 5;
-      console.log('argv = ' + process.argv);
-    process.argv.slice(3).forEach(function(test) {
-console.log('adding file ' + test + ' to test');
-      mocha.addFile(GAIA_DIR + '/' + test);
-    });
-
-    mocha.run(function() {
-      process.on('exit', function () {
-console.log("failures " + JSON.stringify(failures));
-        process.exit(failures);
-      });
-    });
-*/
   }
 
-}(this));

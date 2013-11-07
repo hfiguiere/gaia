@@ -17,3 +17,5 @@ DialerIntegration.prototype = {
     optionRecents: '#option-recents'
   }
 };
+
+module.exports = DialerIntegration;
