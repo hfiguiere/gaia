@@ -725,9 +725,6 @@ common-install:
 
 .PHONY: update-common
 update-common: common-install
-	# integration tests
-	rm -f tests/vendor/marionette.js
-	cp $(TEST_AGENT_DIR)/node_modules/marionette-client/marionette.js tests/js/vendor/
 
 	# common testing tools
 	mkdir -p $(TEST_COMMON)/vendor/test-agent/
