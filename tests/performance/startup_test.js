@@ -12,7 +12,11 @@ entryPoint = arr[1];
 marionette('startup test ' + mozTestInfo.appPath + ' >', function() {
 
   var app;
-  var client = marionette.client();
+  var client = marionette.client({
+    settings: {
+      'ftu.manifestURL': null
+    }
+  });
 
   var performanceHelper;
 

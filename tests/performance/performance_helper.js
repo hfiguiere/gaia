@@ -120,7 +120,8 @@ function PerformanceHelper(opts) {
      *
      */
     repeatWithDelay: function(generator, callback) {
-      callback = callback || this.app.defaultCallback;
+
+      callback = callback || this.app.client.defaultCallback;
 
       var pending = this.runs;
 
@@ -159,7 +160,7 @@ function PerformanceHelper(opts) {
      */
     task: function(generator, callback) {
       var app = this.app;
-      callback = (callback || app.defaultCallback);
+      callback = (callback || app.client.defaultCallback);
       var instance;
 
       function singleTaskNext(err, value) {
@@ -187,8 +188,8 @@ function PerformanceHelper(opts) {
       // generators in .task
       var appInstance = Object.create(app);
       appInstance.defaultCallback = singleTaskNext;
-      appInstance.device = Object.create(app.device);
-      appInstance.device.defaultCallback = singleTaskNext;
+      appInstance.client = Object.create(app.client);
+      appInstance.client.defaultCallback = singleTaskNext;
 
       try {
         var instance = generator.call(this, appInstance, singleTaskNext);
@@ -198,48 +199,12 @@ function PerformanceHelper(opts) {
       }
     },
 
-    waitFor: function(test, timeout, callback, _start) {
-      var self = this;
-
-      if (typeof(timeout) === 'function') {
-        callback = timeout;
-        timeout = null;
-      }
-
-      if (!timeout)
-        timeout = 10000;
-
-      test(function(err, result) {
-        _start = _start || Date.now();
-
-        if (Date.now() - _start > timeout) {
-          callback(
-            new Error('Timeout more then: "' + timeout + 'ms has passed.')
-          );
-          return;
-        }
-
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        if (result) {
-          callback(null, result);
-        } else {
-          setTimeout(function() {
-            self.waitFor(test, timeout, callback, _start);
-          }, 100);
-        }
-      });
-    },
-
     delay: function(client, givenCallback) {
       givenCallback = givenCallback || client.defaultCallback;
       var interval = this.opts.spawnInterval;
 
       var start = Date.now();
-      this.waitFor(function(callback) {
+      this.app.client.waitFor(function(callback) {
         if (Date.now() - start >= interval) {
           callback(null, true);
         } else {

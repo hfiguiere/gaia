@@ -14,7 +14,11 @@ entryPoint = arr[1];
 marionette('startup event test ' + mozTestInfo.appPath + ' >', function() {
 
   var app;
-  var client = marionette.client();
+  var client = marionette.client({
+    settings: {
+      'ftu.manifestURL': null
+    }
+  });
 
   app = new App(client, mozTestInfo.appPath);
 

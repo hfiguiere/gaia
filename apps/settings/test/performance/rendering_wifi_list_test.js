@@ -23,7 +23,11 @@ SettingsIntegration.prototype = {
 
 suite(mozTestInfo.appPath + ' >', function() {
   var app;
-  var client = marionette.client();
+  var client = marionette.client({
+    settings: {
+      'ftu.manifestURL': null
+    }
+  });
 
   app = new SettingsIntegration(client, mozTestInfo.appPath);
 

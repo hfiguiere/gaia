@@ -23,7 +23,11 @@ DialerIntegration.prototype = {
 };
 
 suite(mozTestInfo.appPath + '>', function() {
-  var client = marionette.client();
+  var client = marionette.client({
+    settings: {
+      'ftu.manifestURL': null
+    }
+  });
 
   var app = new DialerIntegration(client);
 

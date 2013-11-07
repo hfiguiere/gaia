@@ -1,6 +1,10 @@
 global.GAIA_DIR = process.env.GAIA_DIR || './';
 
-global.mozTestInfo = {appPath: process.env.CURRENT_APP};
+global.mozTestInfo = {
+  appPath: process.env.CURRENT_APP,
+  runs: 5
+};
+
 const excludedApps = [
   'bluetooth', 'keyboard', 'wallpaper', // no generic way to test yet
   'communications/facebook', 'communications/gmail', // part of other apps
