@@ -1,7 +1,7 @@
 'use strict';
 
-var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
-require(GAIA_DIR + '/tests/js/integration_helper.js');
+require('/tests/js/app_integration.js');
+require('/tests/js/integration_helper.js');
 
 function DialerIntegration(device) {
   AppIntegration.apply(this, arguments);
@@ -17,5 +17,3 @@ DialerIntegration.prototype = {
     optionRecents: '#option-recents'
   }
 };
-
-module.exports = DialerIntegration;

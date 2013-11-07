@@ -1,14 +1,8 @@
 (function(window) {
-
-  // register the globals and Node vs Browser
-  if(typeof window.navigator === 'undefined') {
-    window = global.window;
-  }
-
   var TestUrlResolver = (function() {
 
-    var location = global.location,
-        domainParts = global.location.host.split('.'),
+    let location = window.location,
+        domainParts = window.location.host.split('.'),
         addSubdomain = false,
         prefix = null;
 
@@ -25,8 +19,8 @@
 
       parse: function tur_parse(url) {
         if (addSubdomain) {
-          var parsedUrl = this.PARSE_REGEX.exec(url);
-          var domain = location.protocol + '//' + parsedUrl[2] + '.';
+          let parsedUrl = this.PARSE_REGEX.exec(url);
+          let domain = location.protocol + '//' + parsedUrl[2] + '.';
 
           domain += domainParts.slice(1).join('.') + '/';
 
@@ -49,10 +43,5 @@
 
   }());
 
-  global.TestUrlResolver = TestUrlResolver;
-
-  if(typeof module.exports !== 'undefined') {
-    module.exports = TestUrlResolver;
-  }
+  window.TestUrlResolver = TestUrlResolver;
 }(this));
-

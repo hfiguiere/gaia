@@ -1,5 +1,3 @@
-var util = require('util');
-
 global.GAIA_DIR = process.env.GAIA_DIR || './';
 
 global.mozTestInfo = {appPath: process.env.CURRENT_APP};

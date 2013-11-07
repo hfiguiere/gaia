@@ -1,7 +1,7 @@
 'use strict';
 
-var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
-require(GAIA_DIR + '/tests/js/integration_helper.js');
+require('/tests/js/app_integration.js');
+require('/tests/js/integration_helper.js');
 
 function SettingsIntegration(device) {
   AppIntegration.apply(this, arguments);
@@ -16,5 +16,3 @@ SettingsIntegration.prototype = {
     wifiSelector: '#menuItem-wifi'
   }
 };
-
-module.exports = SettingsIntegration;

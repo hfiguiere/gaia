@@ -1,12 +1,7 @@
 'use strict';
 
-var AppIntegration = require(GAIA_DIR + '/tests/js/app_integration.js');
-var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
+var App = require('./app');
 var PerformanceHelper = require(GAIA_DIR + '/tests/performance/performance_helper.js');
-
-function GenericIntegration(device) {
-  AppIntegration.apply(this, arguments);
-}
 
 var manifestPath, entryPoint;
 
@@ -14,48 +9,39 @@ var arr = mozTestInfo.appPath.split('/');
 manifestPath = arr[0];
 entryPoint = arr[1];
 
-GenericIntegration.prototype = {
-  __proto__: AppIntegration.prototype,
-  appName: mozTestInfo.appPath,
-  manifestURL: 'app://' + manifestPath + '.gaiamobile.org/manifest.webapp',
-  entryPoint: entryPoint
-};
-
 marionette('startup test ' + mozTestInfo.appPath + ' >', function() {
 
-  var device;
   var app;
   var client = marionette.client();
 
   var performanceHelper;
 
-  app = new GenericIntegration(client);
-  device = app.device;
+  app = new App(client, mozTestInfo.appPath);
   performanceHelper = new PerformanceHelper({ app: app });
 
   suite(mozTestInfo.appPath + ' >', function() {
 
     setup(function() {
-      IntegrationHelper.unlock(device); // it affects the first run otherwise
-      PerformanceHelper.registerLoadTimeListener(device);
+      app.unlock(); // it affects the first run otherwise
+      PerformanceHelper.registerLoadTimeListener(client);
     });
 
     teardown(function() {
-      PerformanceHelper.unregisterLoadTimeListener(device);
+      PerformanceHelper.unregisterLoadTimeListener(client);
     });
 
     test('startup time', function() {
       // Mocha timeout for this test
       this.timeout(100000);
       // Marionnette timeout for each command sent to the device
-      device.setScriptTimeout(10000);
+      client.setScriptTimeout(10000);
 
       performanceHelper.repeatWithDelay(function(app, next) {
         app.launch();
         app.close();
       });
 
-      var results = PerformanceHelper.getLoadTimes(device);
+      var results = PerformanceHelper.getLoadTimes(client);
       results = results.filter(function (element) {
         if (element.src.indexOf('app://' + manifestPath) !== 0) {
           return false;

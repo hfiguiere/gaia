@@ -1,46 +1,50 @@
 'use strict';
 
-var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
 
-  function extend(dest, obj) {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        dest[key] = obj[key];
-      }
+function extend(dest, obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      dest[key] = obj[key];
     }
   }
+}
 
-  /* opts can have the following keys:
-   * - spawnInterval (optional): defines how many seconds we must wait before
-   *   launching an app. Default is 6000.
-   * - runs (optional): defines how many runs we should do. Default is 5.
-   */
-  function PerformanceHelper(opts) {
-    // default values
-    this.opts = {
-      // Time before gecko spawns a new template process
-      // see the pref dom.ipc.processPrelaunch.delayMs in
-      // http://mxr.mozilla.org/mozilla-central/source/b2g/app/b2g.js#577
-      // FIXME it would be very nice to get it automatically via marionette
-      // we add 1s to this value to give a little more time to the background
-      // task to finish the preloading
-      spawnInterval: 6000,
-      runs: mozTestInfo.runs
-    };
+/* opts can have the following keys:
+ * - spawnInterval (optional): defines how many seconds we must wait before
+ *   launching an app. Default is 6000.
+ * - runs (optional): defines how many runs we should do. Default is 5.
+ */
+function PerformanceHelper(opts) {
+  // default values
+  this.opts = {
+    // Time before gecko spawns a new template process
+    // see the pref dom.ipc.processPrelaunch.delayMs in
+    // http://mxr.mozilla.org/mozilla-central/source/b2g/app/b2g.js#577
+    // FIXME it would be very nice to get it automatically via marionette
+    // we add 1s to this value to give a little more time to the background
+    // task to finish the preloading
+    spawnInterval: 6000,
+    runs: mozTestInfo.runs
+  };
 
-    // overwrite values from the user
-    extend(this.opts, opts);
-
-    if (! this.opts.app) {
-      var errMsg = 'The "app" property must be configured.';
-      throw new Error('PerformanceHelper: ' + errMsg);
-    }
-
-    this.app = this.opts.app;
-    this.runs = this.opts.runs;
-
-    this.results = Object.create(null);
+  // this is global because we need to access this in the Reporter
+  if (global.mozPerfDurations === undefined) {
+    global.mozPerfDurations = {};
   }
+
+  // overwrite values from the user
+  extend(this.opts, opts);
+
+  if (! this.opts.app) {
+    var errMsg = 'The "app" property must be configured.';
+    throw new Error('PerformanceHelper: ' + errMsg);
+  }
+
+  this.app = this.opts.app;
+  this.runs = this.opts.runs;
+
+  this.results = Object.create(null);
+}
 
   extend(PerformanceHelper, {
     // FIXME encapsulate this in a nice object like PerformanceHelperAtom
@@ -69,19 +73,14 @@ var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
       device.executeScript(removeListener);
     },
 
-    getLoadTimes: function(device) {
+    getLoadTimes: function(client) {
       var getResults = 'return global.wrappedJSObject.loadTimes;';
-      return device.executeScript(getResults);
+      return client.executeScript(getResults);
     },
 
 
     reportDuration: function(values, title) {
       title = title || '';
-
-      // this is global because we need to access this in the Reporter
-      if (global.mozPerfDurations === null) {
-        global.mozPerfDurations = Object.create(null);
-      }
 
       if (title in global.mozPerfDurations) {
         var errMsg = 'reportDuration was called twice with the same title';
@@ -199,12 +198,54 @@ var IntegrationHelper = require(GAIA_DIR + '/tests/js/integration_helper.js');
       }
     },
 
-    delay: function(callback) {
-      IntegrationHelper.delay(
-        this.app.device,
-        this.opts.spawnInterval,
-        callback
-      );
+    waitFor: function(test, timeout, callback, _start) {
+      var self = this;
+
+      if (typeof(timeout) === 'function') {
+        callback = timeout;
+        timeout = null;
+      }
+
+      if (!timeout)
+        timeout = 10000;
+
+      test(function(err, result) {
+        _start = _start || Date.now();
+
+        if (Date.now() - _start > timeout) {
+          callback(
+            new Error('Timeout more then: "' + timeout + 'ms has passed.')
+          );
+          return;
+        }
+
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        if (result) {
+          callback(null, result);
+        } else {
+          setTimeout(function() {
+            self.waitFor(test, timeout, callback, _start);
+          }, 100);
+        }
+      });
+    },
+
+    delay: function(client, givenCallback) {
+      givenCallback = givenCallback || client.defaultCallback;
+      var interval = this.opts.spawnInterval;
+
+      var start = Date.now();
+      this.waitFor(function(callback) {
+        if (Date.now() - start >= interval) {
+          callback(null, true);
+        } else {
+          callback(null, null);
+        }
+      }, null, givenCallback);
     },
 
     observe: function(callback) {

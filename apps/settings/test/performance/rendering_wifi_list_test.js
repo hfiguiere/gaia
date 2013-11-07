@@ -1,27 +1,40 @@
 'use strict';
 
-requireCommon('test/synthetic_gestures.js');
+var App = require(GAIA_DIR + '/tests/performance/app.js');
+
+require(GAIA_DIR + '/test_apps/test-agent/common/test/synthetic_gestures.js');
+
 var PerformanceHelper =
   require(GAIA_DIR + '/tests/performance/performance_helper.js');
-var SettingsIntegration =
-  require(GAIA_DIR + '/apps/settings/test/integration/app.js');
+
+function SettingsIntegration(client) {
+  App.apply(this, arguments);
+}
+
+SettingsIntegration.prototype = {
+  __proto__: App.prototype,
+  appName: 'Settings',
+  manifestURL: 'app://settings.gaiamobile.org/manifest.webapp',
+
+  selectors: {
+    wifiSelector: '#menuItem-wifi'
+  }
+};
 
 suite(mozTestInfo.appPath + ' >', function() {
-  var device;
   var app;
   var client = marionette.client();
 
-  app = new SettingsIntegration(client);
-  device = app.device;
+  app = new SettingsIntegration(client, mozTestInfo.appPath);
 
   setup(function() {
     // It affects the first run otherwise
-    IntegrationHelper.unlock(device);
+    app.unlock();
   });
 
   test('rendering WiFi list >', function() {
     this.timeout(500000);
-    device.setScriptTimeout(50000);
+    client.setScriptTimeout(50000);
 
     var lastEvent = 'settings-panel-wifi-ready';
 

@@ -1,26 +1,40 @@
 'use strict';
 
-requireCommon('test/synthetic_gestures.js');
-require(GAIA_DIR + '/tests/performance/performance_helper.js');
-var DialerIntegration =
-  require(GAIA_DIR + '/apps/communications/dialer/test/integration/app.js');
+require(GAIA_DIR + '/test_apps/test-agent/common/test/synthetic_gestures.js');
+
+var App =
+  require(GAIA_DIR + '/tests/performance/app.js');
+var PerformanceHelper =
+  require(GAIA_DIR + '/tests/performance/performance_helper.js');
+
+function DialerIntegration(client) {
+  App.apply(this, arguments);
+}
+
+DialerIntegration.prototype = {
+  __proto__: App.prototype,
+  appName: 'Phone',
+  manifestURL: 'app://communications.gaiamobile.org/manifest.webapp',
+  entryPoint: 'dialer',
+
+  selectors: {
+    optionRecents: '#option-recents'
+  }
+};
 
 suite(mozTestInfo.appPath + '>', function() {
-  var device;
-  var app;
   var client = marionette.client();
 
-  app = new DialerIntegration(client);
-  device = app.device;
+  var app = new DialerIntegration(client);
 
   setup(function() {
-    IntegrationHelper.unlock(device);
+    app.unlock();
   });
 
   test('Dialer/callLog rendering time >', function() {
 
     this.timeout(500000);
-    device.setScriptTimeout(50000);
+    client.setScriptTimeout(50000);
 
     var lastEvent = 'call-log-ready';
 
