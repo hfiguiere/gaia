@@ -16,3 +16,5 @@ SettingsIntegration.prototype = {
     wifiSelector: '#menuItem-wifi'
   }
 };
+
+module.exports = SettingsIntegration;
