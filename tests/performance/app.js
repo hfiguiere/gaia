@@ -1,5 +1,8 @@
+var fs = require('fs'),
+    util = require('util');
 
 function PerfApp(client, origin) {
+  origin = util.format('app://%s.gaiamobile.org', origin);
   this.client = client;
   this.origin = origin;
 }
@@ -15,6 +18,10 @@ PerfApp.prototype = {
     this.client.apps.launch(this.origin);
     this.client.apps.switchToApp(this.origin);
     this.client.helper.waitForElement('body');
+  },
+
+  close: function() {
+    this.client.apps.close(this.origin);
   },
 
   unlock: function() {

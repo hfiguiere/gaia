@@ -20,7 +20,7 @@ marionette('startup event test ' + mozTestInfo.appPath + ' >', function() {
     }
   });
 
-  app = new App(client, mozTestInfo.appPath);
+  app = new App(client, entryPoint ? entryPoint : manifestPath);
 
   suite(mozTestInfo.appPath + ' >', function() {
 
