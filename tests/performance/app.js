@@ -16,9 +16,8 @@ function PerfApp(client, origin) {
   manifestPath = arr[0];
   entryPoint = arr[1];
 
-  origin = util.format('app://%s.gaiamobile.org%s',
-		       manifestPath,
-		       entryPoint ? util.format('/%s', entryPoint) : '');
+  origin = util.format('app://%s.gaiamobile.org',
+		       manifestPath);
   this.client = client;
   this.origin = origin;
   this.skip = false;
