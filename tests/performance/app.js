@@ -2,9 +2,26 @@ var fs = require('fs'),
     util = require('util');
 
 function PerfApp(client, origin) {
-  origin = util.format('app://%s.gaiamobile.org', origin);
+  if(excludedApps.indexOf(origin) !== -1) {
+    this.client = null;
+    this.origin = null;
+    this.skip = true;
+    if (process.env.VERBOSE) {
+      console.log("'" + origin +
+		  "' is an excluded app, skipping tests.");
+    }
+    return;
+  }
+  var arr = mozTestInfo.appPath.split('/');
+  manifestPath = arr[0];
+  entryPoint = arr[1];
+
+  origin = util.format('app://%s.gaiamobile.org%s',
+		       manifestPath,
+		       entryPoint ? util.format('/%s', entryPoint) : '');
   this.client = client;
   this.origin = origin;
+  this.skip = false;
 }
 
 module.exports = PerfApp;

@@ -21,6 +21,10 @@ marionette('startup test ' + mozTestInfo.appPath + ' >', function() {
   var performanceHelper;
 
   app = new App(client, mozTestInfo.appPath);
+  if (app.skip) {
+    return;
+  }
+
   performanceHelper = new PerformanceHelper({ app: app });
 
   suite(mozTestInfo.appPath + ' >', function() {

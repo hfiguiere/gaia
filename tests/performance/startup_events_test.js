@@ -20,10 +20,12 @@ marionette('startup event test ' + mozTestInfo.appPath + ' >', function() {
     }
   });
 
-  app = new App(client, entryPoint ? entryPoint : manifestPath);
+  app = new App(client, mozTestInfo.appPath);
+  if (app.skip){
+    return;
+  }
 
   suite(mozTestInfo.appPath + ' >', function() {
-
     setup(function() {
       // it affects the first run otherwise
       app.unlock();

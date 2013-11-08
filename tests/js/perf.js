@@ -15,6 +15,8 @@ const excludedApps = [
   'system/camera', // copy of the camera app
 ];
 
+global.excludedApps = excludedApps;
+
 if (excludedApps.indexOf(mozTestInfo.appPath) !== -1) {
   if (process.env.VERBOSE) {
     console.log("'" + mozTestInfo.appPath + "' is an excluded app, skipping tests.");
