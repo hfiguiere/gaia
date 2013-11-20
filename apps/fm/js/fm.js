@@ -151,9 +151,14 @@ function updateFreqUI() {
 }
 
 function updatePowerUI() {
-  console.log('Power status: ' + (mozFMRadio.enabled ? 'on' : 'off'));
+  var enabled = mozFMRadio.enabled;
+  if (enabled) {
+    PerformanceTestingHelper.dispatch('fm-radio-enabled');
+    PerformanceTestingHelper.dispatch('startup-path-done');
+  }
+  console.log('Power status: ' + (enabled ? 'on' : 'off'));
   var powerSwitch = $('power-switch');
-  powerSwitch.dataset.enabled = mozFMRadio.enabled;
+  powerSwitch.dataset.enabled = enabled;
   powerSwitch.dataset.enabling = enabling;
 }
 
@@ -688,6 +693,8 @@ var favoritesList = {
 };
 
 function init() {
+  PerformanceTestingHelper.dispatch('start');
+
   frequencyDialer.init();
 
   var seeking = false;
