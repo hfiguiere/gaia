@@ -733,7 +733,7 @@ test-integration:
 
 .PHONY: test-perf
 test-perf:
-	APPS="$(APPS)" MARIONETTE_RUNNER_HOST=$(MARIONETTE_RUNNER_HOST) GAIA_DIR=`pwd` NPM_REGISTRY=$(NPM_REGISTRY) ./bin/gaia-perf-marionette
+	APPS="$(APPS)" MARIONETTE_RUNNER_HOST=$(MARIONETTE_RUNNER_HOST) GAIA_DIR="`pwd`" NPM_REGISTRY=$(NPM_REGISTRY) ./bin/gaia-perf-marionette
 
 .PHONY: tests
 tests: webapp-manifests offline
