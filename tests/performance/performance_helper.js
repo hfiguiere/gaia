@@ -54,6 +54,13 @@ function PerformanceHelper(opts) {
   this.runs = this.opts.runs;
 
   this.results = Object.create(null);
+
+  // inject performance helper
+  if (!this.app.client.contentScript) {
+    this.app.client.plugin('contentScript',
+                           require('marionette-content-script'));
+  }
+  this.app.client.contentScript.inject(GAIA_DIR + '/tests/performance/performance_testing_helper.js');
 }
 
   extend(PerformanceHelper, {
