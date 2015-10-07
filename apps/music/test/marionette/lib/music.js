@@ -631,7 +631,7 @@ Music.prototype = {
     this.client.switchToShadowRoot(cover);
     assert.ok(cover);
     var ratingEl = this.client.findElement('#rating');
-    assert.ok(rating);
+    assert.ok(ratingEl);
     this.client.switchToShadowRoot(ratingEl);
     var star = this.client.findElement('button[value="' + rating + '"]');
     assert.ok(star);
@@ -640,6 +640,27 @@ Music.prototype = {
     this.client.switchToShadowRoot();
 
     this.switchToMe();
+  },
+
+  getShuffleIconStatus: function() {
+    this.showSongInfo();
+
+    var frame = this.playerViewFrame;
+    assert.ok(frame);
+    this.client.switchToFrame(frame);
+
+    var cover = this.client.findElement(Music.Selector.playerCover);
+    this.client.switchToShadowRoot(cover);
+    assert.ok(cover);
+    var shuffleBtn =
+        this.client.findElement('#controls button[data-action="shuffle"]');
+    assert.ok(shuffleBtn);
+    var value = shuffleBtn.getAttribute('data-value');
+    assert.ok(value);
+    this.client.switchToShadowRoot();
+
+    this.switchToMe();
+    return value;
   },
 
   shareWith: function(appName) {

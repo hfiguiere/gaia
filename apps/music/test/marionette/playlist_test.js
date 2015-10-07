@@ -286,13 +286,12 @@ marionette('Music player playlist', function() {
           filePath: 'apps/music/test-data/playlists/a.ogg'
         },
       ]);
+      music.launch();
+      music.waitForFirstTile();
     });
 
     test('Highest rated playlist sort order. moztrap:3674', function() {
       try {
-        music.launch();
-        music.waitForFirstTile();
-
         music.switchToAlbumsView();
 
         music.selectAlbum('We crash computers');
@@ -341,9 +340,6 @@ marionette('Music player playlist', function() {
     });
 
     test('Recently added playlist sort order. moztrap:3675', function() {
-      // start the app so the music files are added to the database.
-      music.launch();
-      music.waitForFirstTile();
       music.waitFinishedScanning();
 
       // close the app
@@ -409,9 +405,6 @@ marionette('Music player playlist', function() {
       }
 
       try {
-        music.launch();
-        music.waitForFirstTile();
-
         music.switchToAlbumsView();
 
         music.selectAlbum('We crash computers');
@@ -481,9 +474,6 @@ marionette('Music player playlist', function() {
 
     test('Shuffle all sort order. moztrap:2357', function() {
       try {
-        music.launch();
-        music.waitForFirstTile();
-
         music.switchToPlaylistsView();
 
         var notrandom = 0;
@@ -509,6 +499,20 @@ marionette('Music player playlist', function() {
         }
         // the first loop will never be "notrandom".
         assert.notEqual(notrandom, loopCount - 1, 'we didn\'t randomise');
+      } catch (e) {
+        assert.ok(false, 'Exception ' + e.stack);
+      }
+    });
+
+    test('Shuffle all icon. bz:1209430', function() {
+      try {
+        music.switchToPlaylistsView();
+        music.selectPlaylist('Shuffle all');
+
+        music.waitForPlayerView();
+
+        var state = music.getShuffleIconStatus();
+        assert.equal(state, 'on', 'Shuffle icon not highlighted');
       } catch (e) {
         assert.ok(false, 'Exception ' + e.stack);
       }
